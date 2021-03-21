@@ -28,7 +28,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,16 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\AboutDialog.cs">
+    <Compile Include="AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AboutDialog.Designer.cs">
+    <Compile Include="AboutDialog.Designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FreeSpaceDialog.cs">
+    <Compile Include="FreeSpaceDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FreeSpaceDialog.Designer.cs">
+    <Compile Include="FreeSpaceDialog.Designer.cs">
       <DependentUpon>FreeSpaceDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -70,34 +70,32 @@
     </Compile>
     <Compile Include="MainForm.Pokemon.cs">
       <SubType>Form</SubType>
-      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.Trainers.cs">
       <SubType>Form</SubType>
-      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NumberBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\OffsetDialog.cs">
+    <Compile Include="OffsetDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OffsetDialog.Designer.cs">
+    <Compile Include="OffsetDialog.Designer.cs">
       <DependentUpon>OffsetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trainer.cs" />
-    <EmbeddedResource Include="Forms\AboutDialog.resx">
+    <EmbeddedResource Include="AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FreeSpaceDialog.resx">
+    <EmbeddedResource Include="FreeSpaceDialog.resx">
       <DependentUpon>FreeSpaceDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OffsetDialog.resx">
+    <EmbeddedResource Include="OffsetDialog.resx">
       <DependentUpon>OffsetDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

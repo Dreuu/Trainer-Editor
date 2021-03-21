@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Forms;
 using GBAHL.Drawing;
 using GBAHL.Text;
-using Hopeless.Forms;
 
 namespace Hopeless
 {
