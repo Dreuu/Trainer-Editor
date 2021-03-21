@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Hopeless.Forms
+namespace Hopeless
 {
     public partial class OffsetDialog : Form
     {

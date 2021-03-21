@@ -1,4 +1,4 @@
-﻿namespace Hopeless.Forms
+﻿namespace Hopeless
 {
     partial class AboutDialog
     {
