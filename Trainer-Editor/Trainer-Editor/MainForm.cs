@@ -20,8 +20,17 @@ namespace Hopeless
 
         bool ignore = false;
 
-        public MainForm()
+        public MainForm(string[] args)
         {
+            if (args.Length == 2)
+            {
+                if (!OpenROM(args[0]))
+                    return;
+                LoadAll();
+                importAll(args[1]);
+                Environment.Exit(0);
+            }
+
             InitializeComponent();
 
             partyPictureBoxes = new PictureBox[6] { p1, p2, p3, p4, p5, p6 };
@@ -44,6 +53,8 @@ namespace Hopeless
             saveToolStripMenuItem.Enabled = false;
             importToolStripMenuItem.Enabled = false;
             exportToolStripMenuItem.Enabled = false;
+            importAllToolStripMenuItem.Enabled = false;
+            exportAllToolStripMenuItem.Enabled = false;
             changePartyOffsetToolStripMenuItem.Enabled = false;
         }
 
@@ -83,6 +94,8 @@ namespace Hopeless
             saveToolStripMenuItem.Enabled = true;
             importToolStripMenuItem.Enabled = true;
             exportToolStripMenuItem.Enabled = true;
+            importAllToolStripMenuItem.Enabled = true;
+            exportAllToolStripMenuItem.Enabled = true;
             changePartyOffsetToolStripMenuItem.Enabled = true;
 
             cClass.Items.Clear();
@@ -274,7 +287,8 @@ namespace Hopeless
             }
 
             // update title
-            Text = $"Hopeless Trainer Editor v1.0 - [{Path.GetFileName(openFileDialog1.FileName)}]";
+            if (openFileDialog1 != null)
+                Text = $"Hopeless Trainer Editor v1.0 - [{Path.GetFileName(openFileDialog1.FileName)}]";
 
             // set new open ROM and report success
             rom?.Dispose();
@@ -303,9 +317,12 @@ namespace Hopeless
             LoadItems();
 
             // settings for editor
-            txtSpecies.MaximumValue = pokemonCount - 1;
-            txtClassID.MaximumValue = classCount - 1;
-            nSprite.Maximum = trainerSpriteCount - 1;
+            if (txtSpecies != null)
+                txtSpecies.MaximumValue = pokemonCount - 1;
+            if (txtClassID != null)
+                txtClassID.MaximumValue = classCount - 1;
+            if (nSprite != null)
+                nSprite.Maximum = trainerSpriteCount - 1;
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -520,6 +537,7 @@ namespace Hopeless
                 return;
 
             member.HeldItem = (ushort)cHeld.SelectedIndex;
+            listParty.Items[member.Index].SubItems[2].Text = cHeld.Text;
         }
 
         private void cAttack_SelectedIndexChanged(object sender, EventArgs e)
@@ -544,6 +562,7 @@ namespace Hopeless
             ignore = true;
             var i = new ListViewItem(pokemon[0]);
             i.SubItems.Add("0");
+            i.SubItems.Add("----");
             listParty.Items.Add(i);
 
             grpParty.Text = $"Party (0x{trainer.PartyOffset:X7})";
@@ -693,6 +712,9 @@ namespace Hopeless
 
         private void changePartyOffsetToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (trainer == null)
+                return;
+
             using (var d = new OffsetDialog(trainer.PartyOffset, trainer.Party.Count))
             {
                 if (d.ShowDialog() == DialogResult.OK)
@@ -727,6 +749,113 @@ namespace Hopeless
                     Console.WriteLine("Change offset canceled.");
                 }
 #endif
+            }
+        }
+
+        private void exportAll_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.Description = $"Export All Trainers";
+
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                grpTrainer.Enabled = false;
+                bRandomize.Enabled = false;
+                saveToolStripMenuItem.Enabled = false;
+                importToolStripMenuItem.Enabled = false;
+                exportToolStripMenuItem.Enabled = false;
+                importAllToolStripMenuItem.Enabled = false;
+                exportAllToolStripMenuItem.Enabled = false;
+                changePartyOffsetToolStripMenuItem.Enabled = false;
+
+                for (int trainerNum = 0; trainerNum < trainerCount; trainerNum++)
+                {
+                    LoadTrainer(trainerNum);
+
+                    if (trainer != null)
+                        ExportTrainer($"{folderBrowserDialog1.SelectedPath+"\\"+trainerNum}.trainer");
+                }
+
+                grpTrainer.Enabled = true;
+                bRandomize.Enabled = true;
+                saveToolStripMenuItem.Enabled = true;
+                importToolStripMenuItem.Enabled = true;
+                exportToolStripMenuItem.Enabled = true;
+                importAllToolStripMenuItem.Enabled = true;
+                exportAllToolStripMenuItem.Enabled = true;
+                changePartyOffsetToolStripMenuItem.Enabled = true;
+
+            }
+        }
+
+        private void importAll_Click(object sender, EventArgs e)
+        {
+            string fn = "";
+            folderBrowserDialog1.Description = $"Import All Trainers";
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                fn = folderBrowserDialog1.SelectedPath;
+            else
+                return;
+
+            if (fn != "")
+            {
+
+                grpTrainer.Enabled = false;
+                bRandomize.Enabled = false;
+                saveToolStripMenuItem.Enabled = false;
+                importToolStripMenuItem.Enabled = false;
+                exportToolStripMenuItem.Enabled = false;
+                importAllToolStripMenuItem.Enabled = false;
+                exportAllToolStripMenuItem.Enabled = false;
+                changePartyOffsetToolStripMenuItem.Enabled = false;
+
+                for (int trainerNum = 0; trainerNum < trainerCount; trainerNum++)
+                {
+                    LoadTrainer(trainerNum);
+                    if (trainer != null && File.Exists($"{fn + "\\" + trainerNum}.trainer"))
+                    {
+                        ImportTrainer($"{fn + "\\" + trainerNum}.trainer");
+                        SaveTrainer();
+                    }
+
+                }
+
+                grpTrainer.Enabled = true;
+                bRandomize.Enabled = true;
+                saveToolStripMenuItem.Enabled = true;
+                importToolStripMenuItem.Enabled = true;
+                exportToolStripMenuItem.Enabled = true;
+                importAllToolStripMenuItem.Enabled = true;
+                exportAllToolStripMenuItem.Enabled = true;
+                changePartyOffsetToolStripMenuItem.Enabled = true;
+
+            }
+        }
+
+        private void importAll(string fn = "")
+        {
+            if (fn == "")
+            {
+                folderBrowserDialog1.Description = $"Import All Trainers";
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                    fn = folderBrowserDialog1.SelectedPath;
+                else
+                    return;
+            }
+
+
+            if (fn != "")
+            {
+                for (int trainerNum = 0; trainerNum < trainerCount; trainerNum++)
+                {
+                    LoadTrainer(trainerNum);
+                    if (trainer != null && File.Exists($"{fn + "\\" + trainerNum}.trainer"))
+                    {
+                        ImportTrainer($"{fn + "\\" + trainerNum}.trainer");
+                        SaveTrainer();
+                    }
+
+                }
+
             }
         }
     }

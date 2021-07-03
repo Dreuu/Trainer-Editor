@@ -363,6 +363,7 @@ namespace Hopeless
                     bw.Write(trainer.Items[i]);
 
                 bw.Write(trainer.DoubleBattle);
+                bw.Write(trainer.AI);
                 bw.Write(trainer.HasCustomAttacks);
                 bw.Write(trainer.HasHeldItems);
 
@@ -397,6 +398,7 @@ namespace Hopeless
                     trainer.Items[i] = br.ReadUInt16();
 
                 trainer.DoubleBattle = br.ReadBoolean();
+                trainer.AI = br.ReadUInt32();
                 trainer.HasCustomAttacks = br.ReadBoolean();
                 trainer.HasHeldItems = br.ReadBoolean();
 
@@ -490,6 +492,14 @@ namespace Hopeless
                 {
                     var i = new ListViewItem(pokemon[pk.Species]);
                     i.SubItems.Add($"{pk.Level}");
+                    if (pk.HeldItem == 0)
+                    {
+                        i.SubItems.Add("----");
+                    }
+                    else
+                    {
+                        i.SubItems.Add($"{cHeld.Items[pk.HeldItem].ToString()}");
+                    }
 
                     listParty.Items.Add(i);
                 }
